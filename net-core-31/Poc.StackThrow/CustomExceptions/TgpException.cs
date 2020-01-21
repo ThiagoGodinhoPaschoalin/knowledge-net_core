@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Test.StackThrow.CustomExceptions
+namespace Poc.StackThrow.CustomExceptions
 {
     public class TgpException : Exception
     {

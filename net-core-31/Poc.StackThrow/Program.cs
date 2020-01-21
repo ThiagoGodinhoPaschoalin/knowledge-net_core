@@ -1,6 +1,6 @@
-﻿using Test.StackThrow.Examples;
+﻿using Poc.StackThrow.Examples;
 
-namespace Test.StackThrow
+namespace Poc.StackThrow
 {
     class Program
     {

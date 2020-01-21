@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Test.StackThrow.Examples
+namespace Poc.StackThrow.Examples
 {
     public static class Example02
     {

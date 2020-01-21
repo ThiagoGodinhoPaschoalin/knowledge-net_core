@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using Test.StackThrow.CustomExceptions;
+using Poc.StackThrow.CustomExceptions;
 
-namespace Test.StackThrow.Examples
+namespace Poc.StackThrow.Examples
 {
     public static class Example03
     {
