@@ -350,3 +350,5 @@ MigrationBackup/
 .ionide/
 /net-core-31/Poc.DapperWithEF/appsettings.Development.json
 /net-core-31/Poc.UOW/appsettings.Development.json
+/net-core-31/Poc.ThreadAndTask/appsettings.Development.json
+/net-core-31/Poc.EFWithManyContexts/appsettings.Development.json
