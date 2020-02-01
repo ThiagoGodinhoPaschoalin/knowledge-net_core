@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Helper.BaseContext.BaseRepositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Poc.ThreadAndTask.Repositories;
 
 namespace Poc.ThreadAndTask.Controllers
 {
@@ -11,16 +14,20 @@ namespace Poc.ThreadAndTask.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ILogger<ValuesController> _logger;
+        private readonly ILocalRepository localRepository;
+        private readonly ProductBaseRepository productBaseRepository;
 
-        public ValuesController(ILogger<ValuesController> logger)
+        public ValuesController(ILogger<ValuesController> logger, ILocalRepository localRepository, ProductBaseRepository productBaseRepository)
         {
             _logger = logger;
+            this.localRepository = localRepository;
+            this.productBaseRepository = productBaseRepository;
         }
 
         [HttpGet("v1")]
         public IActionResult Get()
         {
-            Console.WriteLine($"[v1]: Started;");
+            Console.WriteLine($"[v1]: Started: Get memory string;");
             string xpto = "Thiago";
 
             new Thread( (value) =>
@@ -43,7 +50,13 @@ namespace Poc.ThreadAndTask.Controllers
         [HttpGet("v1/{xpto}")]
         public IActionResult Get(string xpto)
         {
-            Console.WriteLine($"[v1/{xpto}]: Started;");
+            /* 
+             * Assim que 'xpto' entra na requisição, um espaço de memória é reservado para ele!
+             * Percabe que, ao final do ciclo da requisição, a memória continua sendo utilizada pela Thread e Task criados.
+             * Mesmo que eu tenha passado o valor para a Thread e a Task ANTES de mudar o seu valor, ela apresentam o novo valor.
+             */
+
+            Console.WriteLine($"[v1/{xpto}]: Started: get parameter(s)");
 
             new Thread((value) =>
             {
@@ -58,6 +71,8 @@ namespace Poc.ThreadAndTask.Controllers
                 Console.WriteLine($"[v1/{xpto}] Task[{Task.CurrentId}];");
             });
 
+            xpto = $"The value '{xpto}' has changed.";
+
             return Ok($"Success [v1/{xpto}]");
         }
 
@@ -65,7 +80,7 @@ namespace Poc.ThreadAndTask.Controllers
         [HttpGet("v2")]
         public IActionResult GetV2()
         {
-            Console.WriteLine($"[v2]: Started");
+            Console.WriteLine($"[v2]: Started: No limit to finished!");
 
             Task.Run(() =>
             {
@@ -96,6 +111,38 @@ namespace Poc.ThreadAndTask.Controllers
             });
 
             return Ok("Success [v2]");
+        }
+
+        [HttpGet("v3")]
+        public IActionResult GetV3()
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(5000);
+                Console.WriteLine($"[v3] Task[{Task.CurrentId}]");
+                _logger.LogInformation($"Repository is null: '{localRepository is null}'.");
+                
+                string dataString = JsonConvert.SerializeObject(localRepository.GetAllData());
+                _logger.LogInformation($"AllData: {dataString}");
+            });
+
+            return Ok("Success [v3]");
+        }
+
+        [HttpGet("v4")]
+        public IActionResult GetV4()
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(5000);
+                Console.WriteLine($"[v4] Task[{Task.CurrentId}]");
+                _logger.LogInformation($"Repository is null: '{productBaseRepository is null}'.");
+
+                string dataString = JsonConvert.SerializeObject(productBaseRepository.PrintAll());
+                _logger.LogInformation($"AllData: {dataString}");
+            });
+
+            return Ok("Success [v4]");
         }
     }
 }

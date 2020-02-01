@@ -1,14 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Helper.BaseContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Poc.ThreadAndTask.Repositories;
 
 namespace Poc.ThreadAndTask
 {
@@ -21,15 +17,25 @@ namespace Poc.ThreadAndTask
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //Projeto base que inicia conexão e fornece repositórios de exemplos para serem usados..
+            services.AddBaseContext();
+
+
+
+            services.AddScoped<ILocalRepository, LocalRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            //Projeto base que compara e preenche os dados do banco de dados.
+            app.UseBaseContextMigration();
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
