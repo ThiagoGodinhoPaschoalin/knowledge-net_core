@@ -1,52 +1,63 @@
-﻿using Poc.UOW.Contexts;
-using Poc.UOW.Repositories;
+﻿using Helper.BaseContext.BaseRepositories;
+using Helper.BaseContext.Contexts;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace Poc.UOW.Patterns
 {
     public class UnitOfWorkRepository
     {
-        private readonly ProjectDbContext context;
+        private readonly ProjectDbBaseContext context;
+        private readonly ILoggerFactory loggerFactory;
+
+        private readonly ILogger logger;
 
 
-
-        private ProductRepository _productRep;
-        public ProductRepository Products
+        private ProductBaseRepository _productRep;
+        public ProductBaseRepository Products
         {
             get
             {
-                _productRep = _productRep ?? new ProductRepository(context);
+                _productRep = _productRep ?? 
+                    new ProductBaseRepository(context, loggerFactory.CreateLogger<ProductBaseRepository>());
                 return _productRep;
             }
         }
 
 
 
-        private StarRatingRepository _starRatingRep;
-        public StarRatingRepository StarRatings
+        private StarRatingBaseRepository _starRatingRep;
+        public StarRatingBaseRepository StarRatings
         {
             get
             {
-                _starRatingRep = _starRatingRep ?? new StarRatingRepository(context);
+                _starRatingRep = _starRatingRep ?? 
+                    new StarRatingBaseRepository(context, loggerFactory.CreateLogger<StarRatingBaseRepository>());
                 return _starRatingRep;
             }
         }
 
 
 
-        public UnitOfWorkRepository(ProjectDbContext context)
+        public UnitOfWorkRepository(ProjectDbBaseContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
+            this.loggerFactory = loggerFactory;
+            logger = this.loggerFactory.CreateLogger<UnitOfWorkRepository>();
             Begin();
         }
 
         public void Save()
         {
+            logger.LogDebug("[ Called: Save ]");
             context.SaveChanges();
         }
 
 
         public void Begin()
         {
+            logger.LogDebug("[ Called: Begin ]");
+
             ///Agora estou delegando a função de iniciar uma transação para o UOW;
             ///Como foram retirados todos os repositórios da Injeção de dependência,
             ///O repositório UOW é quem vai gerenciar a transação;
@@ -61,13 +72,16 @@ namespace Poc.UOW.Patterns
 
         public void Commit()
         {
+            logger.LogDebug("[ Called: Commit ]");
+
             try
             {
                 context.SaveChanges();
                 context.Database.CommitTransaction();
             }
-            catch
+            catch(Exception ex)
             {
+                logger.LogError(ex, "[ Called: Commit ]");
                 context.Database.RollbackTransaction();
                 throw;
             }

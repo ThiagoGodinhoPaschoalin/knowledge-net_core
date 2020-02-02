@@ -1,4 +1,5 @@
-﻿using Poc.UOW.Patterns;
+﻿using Helper.BaseContext.Models;
+using Poc.UOW.Patterns;
 using System;
 
 namespace Poc.UOW.Business
@@ -16,19 +17,19 @@ namespace Poc.UOW.Business
         {
             try
             {
-                var newStarDp = repository.StarRatings.AddByDapper(new Models.StarRatingModel
+                var newStarDp = repository.StarRatings.AddByDapper(new StarRatingModel
                 {
                     Star = 1.1f,
                     Description = "1.1 Estrelas"
                 });
 
-                var newStarEF = repository.StarRatings.Add(new Models.StarRatingModel
+                var newStarEF = repository.StarRatings.Add(new StarRatingModel
                 {
                     Star = 2.1f,
                     Description = "2.1 Estrelas"
                 });
 
-                repository.Products.Add(new Models.ProductModel
+                repository.Products.Add(new ProductModel
                 {
                     Id = Guid.NewGuid(),
                     Code = "A001",
@@ -47,7 +48,7 @@ namespace Poc.UOW.Business
                 /// e somente após o 'SaveChanges()', que o EF adicionar sua alteração na stack do contexto;
                 /// Obs.: O 'SaveChanges()' não persiste no banco, pq ele está contido em uma transação! 
                 /// (Veja no UnitOfWorkRepository);
-                repository.Products.AddByDapper(new Models.ProductModel
+                repository.Products.AddByDapper(new ProductModel
                 {
                     Id = Guid.NewGuid(),
                     Code = "A002",
@@ -69,13 +70,13 @@ namespace Poc.UOW.Business
         {
             try
             {
-                var newStarDp = repository.StarRatings.AddByDapper(new Models.StarRatingModel
+                var newStarDp = repository.StarRatings.AddByDapper(new StarRatingModel
                 {
                     Star = 1.0f,
                     Description = "1.0 Estrelas"
                 });
 
-                var newStarEF = repository.StarRatings.Add(new Models.StarRatingModel
+                var newStarEF = repository.StarRatings.Add(new StarRatingModel
                 {
                     Star = 2.0f,
                     Description = "2.0 Estrelas"
@@ -83,7 +84,7 @@ namespace Poc.UOW.Business
                 ///Add to the Stack
                 repository.Save();
 
-                repository.Products.Add(new Models.ProductModel
+                repository.Products.Add(new ProductModel
                 {
                     Id = Guid.NewGuid(),
                     Code = "A001",
@@ -95,7 +96,7 @@ namespace Poc.UOW.Business
                 ///Add to the Stack
                 repository.Save();
 
-                repository.Products.AddByDapper(new Models.ProductModel
+                repository.Products.AddByDapper(new ProductModel
                 {
                     Id = Guid.NewGuid(),
                     Code = "A002",
@@ -106,14 +107,14 @@ namespace Poc.UOW.Business
                     StarRatingId = newStarEF.Id
                 });
 
-                repository.Products.Add(new Models.ProductModel
+                repository.Products.Add(new ProductModel
                 {
                     Id = Guid.NewGuid(),
                     Code = "A003",
                     Name = "Mouse e Teclado sem Fio",
                     Price = 60.50m,
                     CreatedDate = DateTime.UtcNow,
-                    StarRating = new Models.StarRatingModel
+                    StarRating = new StarRatingModel
                     {
                         Star = 3.0f,
                         Description = "3.0 Estrelas"
