@@ -9,7 +9,7 @@ namespace Helper.BaseContext
 {
     public static class DIServices
     {
-        public static void AddBaseContext(this IServiceCollection services)
+        public static void AddBaseContext(this IServiceCollection services, bool isUOW = false)
         {
             services.AddDbContextPool<ProjectDbBaseContext>(opt =>
             {
@@ -20,8 +20,11 @@ namespace Helper.BaseContext
                 opt.EnableSensitiveDataLogging();
             });
 
-            services.AddScoped<ProductBaseRepository>();
-            services.AddScoped<StarRatingBaseRepository>();
+            if (!isUOW)
+            {
+                services.AddScoped<ProductBaseRepository>();
+                services.AddScoped<StarRatingBaseRepository>();
+            }
         }
 
         /// <summary>

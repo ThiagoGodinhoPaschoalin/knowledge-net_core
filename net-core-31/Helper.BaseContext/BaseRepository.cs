@@ -1,7 +1,9 @@
-﻿using Dapper;
+﻿using CoreLib.Extensions;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -40,14 +42,16 @@ namespace Helper.BaseContext
         /// </summary>
         private readonly DbContext context;
 
+        protected ILogger Logger { get; }
+
         /// <summary>
         /// Contrato padrão;
         /// </summary>
         /// <param name="context"></param>
-        protected BaseRepository(DbContext context)
+        protected BaseRepository(DbContext context, ILogger logger)
         {
             this.context = context;
-
+            this.Logger = logger;
             ///Sempre iniciar uma transação no ciclo de vida da requisição
             ///Importância de sempre iniciar a transição:
             ///     Com isso, eu posso facilmente compartilhar essa transição com o Dapper, os mantendo no mesmo escopo!
@@ -91,12 +95,13 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: Add ]");
                 var result = context.Set<TModel>().Add(model);
-                //context.SaveChanges();
                 return result.Entity;
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: Add ]");
                 throw;
             }
         }
@@ -110,10 +115,12 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: Get( with Expression ) ]");
                 return context.Set<TModel>()?.Where(predicate).AsEnumerable();
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: Get( with Expression ) ]");
                 throw;
             }
         }
@@ -126,10 +133,12 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: GetAll ]");
                 return context.Set<TModel>()?.AsEnumerable();
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: GetAll ]");
                 throw;
             }
         }
@@ -143,10 +152,12 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: GetOne ]");
                 return context.Set<TModel>().Find(modelId);
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: GetOne ]");
                 throw;
             }
         }
@@ -160,17 +171,23 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: Remove ]");
+
                 var existing = context.Set<TModel>().Find(model);
+                Logger.LogInformation("[ Called: Remove ]: [ Step: Find ]");
+
                 if (existing != null)
                 {
+                    Logger.LogInformation("[ Called: Remove ]: [ Step: Deleted ]");
                     var result = context.Set<TModel>().Remove(existing);
                     return result.State == EntityState.Deleted;
                 }
 
                 return false;
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: Remove ]");
                 throw;
             }
         }
@@ -184,12 +201,15 @@ namespace Helper.BaseContext
         {
             try
             {
+                Logger.LogInformation("[ Called: Update ]");
+
                 context.Entry(model).State = EntityState.Modified;
                 var result = context.Set<TModel>().Attach(model);
                 return result.Entity;
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogInformation(ex, "[ Called: Update ]");
                 throw;
             }
         }
@@ -202,12 +222,22 @@ namespace Helper.BaseContext
         {
             try
             {
+                #region Debug
+                
+                bool hasParams = parameters.TrySerialize(out string paramsSerialized);
+                string showParams = hasParams ? paramsSerialized : "NULL";
+                Logger.LogDebug($"[ Called: QueryOne ] [ TEntity: {typeof(TEntity)} ] [ Parameters: '{showParams}' ]");
+                Logger.LogDebug(sqlCommand);
+
+                #endregion
+
                 return context.Database
                     .GetDbConnection()
                     .QueryFirstOrDefault<TEntity>(sqlCommand, parameters, context.Database.CurrentTransaction.GetDbTransaction());
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: QueryOne ]");
                 throw;
             }
         }
@@ -216,12 +246,22 @@ namespace Helper.BaseContext
         {
             try
             {
+                #region Debug
+
+                bool hasParams = parameters.TrySerialize(out string paramsSerialized);
+                string showParams = hasParams ? paramsSerialized : "NULL";
+                Logger.LogDebug($"[ Called: QueryMany ] [ TEntity: {typeof(TEntity)} ] [ Parameters: '{showParams}' ]");
+                Logger.LogDebug(sqlCommand);
+
+                #endregion
+
                 return context.Database
                     .GetDbConnection()
                     .Query<TEntity>(sqlCommand, parameters, context.Database.CurrentTransaction.GetDbTransaction());
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: QueryMany ]");
                 throw;
             }
         }
@@ -230,11 +270,21 @@ namespace Helper.BaseContext
         {
             try
             {
+                #region Debug
+
+                bool hasParams = parameters.TrySerialize(out string paramsSerialized);
+                string showParams = hasParams ? paramsSerialized : "NULL";
+                Logger.LogDebug($"[ Called: Execute ] [ Parameters: '{showParams}' ]");
+                Logger.LogDebug(sqlCommand);
+
+                #endregion
+
                 return context.Database
                     .GetDbConnection().Execute(sqlCommand, parameters, context.Database.CurrentTransaction.GetDbTransaction());
             }
-            catch
+            catch(Exception ex)
             {
+                Logger.LogError(ex, "[ Called: Execute ]");
                 throw;
             }
         }
