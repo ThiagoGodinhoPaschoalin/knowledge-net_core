@@ -348,5 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/net-core-31/Helper.BaseContext/appsettings.Development.json
-/net-core-31/Poc.DapperWithEF/appsettings.Development.json
+/Helper.BaseContext/appsettings.Development.json
+/Poc.DapperWithEF/appsettings.Development.json
