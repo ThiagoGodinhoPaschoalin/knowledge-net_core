@@ -1,45 +1,46 @@
-﻿using Helper.BaseContext.BaseRepositories;
-using Helper.BaseContext.Contexts;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Poc.UOW.Contexts;
+using Poc.UOW.Repositories;
 using System;
 
 namespace Poc.UOW.Patterns
 {
     public class UnitOfWorkRepository
     {
-        private readonly ProjectDbBaseContext context;
+        private readonly ProjectDbContext context;
         private readonly ILoggerFactory loggerFactory;
 
         private readonly ILogger logger;
 
 
-        private ProductBaseRepository _productRep;
-        public ProductBaseRepository Products
+        private ProductRepository _productRep;
+        public ProductRepository Products
         {
             get
             {
                 _productRep = _productRep ?? 
-                    new ProductBaseRepository(context, loggerFactory.CreateLogger<ProductBaseRepository>());
+                    new ProductRepository(context, loggerFactory.CreateLogger<ProductRepository>(), context.Database.CurrentTransaction.GetDbTransaction());
                 return _productRep;
             }
         }
 
 
 
-        private StarRatingBaseRepository _starRatingRep;
-        public StarRatingBaseRepository StarRatings
+        private StarRatingRepository _starRatingRep;
+        public StarRatingRepository StarRatings
         {
             get
             {
-                _starRatingRep = _starRatingRep ?? 
-                    new StarRatingBaseRepository(context, loggerFactory.CreateLogger<StarRatingBaseRepository>());
+                _starRatingRep = _starRatingRep ??
+                    new StarRatingRepository(context, loggerFactory.CreateLogger<StarRatingRepository>(), context.Database.CurrentTransaction.GetDbTransaction());
                 return _starRatingRep;
             }
         }
 
 
 
-        public UnitOfWorkRepository(ProjectDbBaseContext context, ILoggerFactory loggerFactory)
+        public UnitOfWorkRepository(ProjectDbContext context, ILoggerFactory loggerFactory)
         {
             this.context = context;
             this.loggerFactory = loggerFactory;

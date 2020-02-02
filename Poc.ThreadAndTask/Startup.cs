@@ -1,4 +1,4 @@
-using Helper.BaseContext;
+using ContextSample;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,9 +22,7 @@ namespace Poc.ThreadAndTask
             services.AddControllers();
 
             //Projeto base que inicia conexão e fornece repositórios de exemplos para serem usados..
-            services.AddBaseContext();
-
-
+            services.AddSampleContext();
 
             services.AddScoped<ILocalRepository, LocalRepository>();
         }
@@ -33,7 +31,7 @@ namespace Poc.ThreadAndTask
         {
 
             //Projeto base que compara e preenche os dados do banco de dados.
-            app.UseBaseContextMigration();
+            app.UseSampleContextMigration();
 
 
             if (env.IsDevelopment())

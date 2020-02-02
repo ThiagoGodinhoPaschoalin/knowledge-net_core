@@ -25,10 +25,7 @@ namespace Poc.DapperWithEF
 
             services.AddDbContextPool<ProjectDbContext>(opt =>
             {
-                ///TODO: You need add a 'DefaultConnection in 'ConnectionStrings' inside 'appsettings.json';
-                ///
-
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(CoreLib.Constants.BaseConstants.GetConnectionString);
                 opt.EnableSensitiveDataLogging();
             });
 

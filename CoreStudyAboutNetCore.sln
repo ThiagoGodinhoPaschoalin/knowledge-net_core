@@ -14,7 +14,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.ThreadAndTask", "Poc.Th
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.EFWithManyContexts", "Poc.EFWithManyContexts\Poc.EFWithManyContexts.csproj", "{74B84042-A92B-4FA1-9723-DBBE6DE76664}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper.BaseContext", "Helper.BaseContext\Helper.BaseContext.csproj", "{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContextSample", "ContextSample\ContextSample.csproj", "{12D21DDB-8BD2-44F4-A232-98BD8855B007}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunMigration", "RunMigration\RunMigration.csproj", "{29A36385-9F10-47BB-9F44-3946D2E2F906}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,18 +100,30 @@ Global
 		{74B84042-A92B-4FA1-9723-DBBE6DE76664}.Release|x64.Build.0 = Release|Any CPU
 		{74B84042-A92B-4FA1-9723-DBBE6DE76664}.Release|x86.ActiveCfg = Release|Any CPU
 		{74B84042-A92B-4FA1-9723-DBBE6DE76664}.Release|x86.Build.0 = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|x64.Build.0 = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Debug|x86.Build.0 = Debug|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|x64.ActiveCfg = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|x64.Build.0 = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|x86.ActiveCfg = Release|Any CPU
-		{B1ABEA2A-2D31-41EB-91A4-1F6C87890C69}.Release|x86.Build.0 = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|x64.Build.0 = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Debug|x86.Build.0 = Debug|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|x64.ActiveCfg = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|x64.Build.0 = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|x86.ActiveCfg = Release|Any CPU
+		{12D21DDB-8BD2-44F4-A232-98BD8855B007}.Release|x86.Build.0 = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|x64.Build.0 = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Debug|x86.Build.0 = Debug|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|x64.ActiveCfg = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|x64.Build.0 = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|x86.ActiveCfg = Release|Any CPU
+		{29A36385-9F10-47BB-9F44-3946D2E2F906}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

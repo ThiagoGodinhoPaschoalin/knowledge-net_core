@@ -1,10 +1,11 @@
-using Helper.BaseContext;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Poc.UOW.Business;
+using Poc.UOW.Contexts;
 using Poc.UOW.Patterns;
 
 namespace Poc.UOW
@@ -23,7 +24,11 @@ namespace Poc.UOW
         {
             services.AddControllers();
 
-            services.AddBaseContext(true);
+            services.AddDbContextPool<ProjectDbContext>(opt =>
+            {
+                opt.UseSqlServer(CoreLib.Constants.BaseConstants.GetConnectionString);
+                opt.EnableSensitiveDataLogging();
+            });
 
             services.AddScoped<UnitOfWorkRepository>();
             services.AddScoped<ProjectBusiness>();
@@ -32,8 +37,6 @@ namespace Poc.UOW
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseBaseContextMigration();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

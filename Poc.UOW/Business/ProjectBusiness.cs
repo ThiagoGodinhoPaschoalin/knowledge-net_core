@@ -1,4 +1,4 @@
-﻿using Helper.BaseContext.Models;
+﻿using Poc.UOW.Models;
 using Poc.UOW.Patterns;
 using System;
 

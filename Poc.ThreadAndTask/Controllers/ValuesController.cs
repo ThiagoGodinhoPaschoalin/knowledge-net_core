@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Helper.BaseContext.BaseRepositories;
+using ContextSample.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -15,13 +16,13 @@ namespace Poc.ThreadAndTask.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly ILocalRepository localRepository;
-        private readonly ProductBaseRepository productBaseRepository;
+        private readonly SampleRepository sampleRepository;
 
-        public ValuesController(ILogger<ValuesController> logger, ILocalRepository localRepository, ProductBaseRepository productBaseRepository)
+        public ValuesController(ILogger<ValuesController> logger, ILocalRepository localRepository, SampleRepository sampleRepository)
         {
             _logger = logger;
             this.localRepository = localRepository;
-            this.productBaseRepository = productBaseRepository;
+            this.sampleRepository = sampleRepository;
         }
 
         [HttpGet("v1")]
@@ -130,19 +131,25 @@ namespace Poc.ThreadAndTask.Controllers
         }
 
         [HttpGet("v4")]
-        public IActionResult GetV4()
+        public async Task<IActionResult> GetV4()
         {
-            Task.Run(() =>
+            int countProducts = await Task.Run(() => 
+            {
+                Thread.Sleep(2000);
+                return sampleRepository.Products.GetAll().Count();
+            });
+
+            _ = Task.Run(() =>
             {
                 Thread.Sleep(5000);
                 Console.WriteLine($"[v4] Task[{Task.CurrentId}]");
-                _logger.LogInformation($"Repository is null: '{productBaseRepository is null}'.");
+                _logger.LogInformation($"Repository is null: '{sampleRepository is null}'.");
 
-                string dataString = JsonConvert.SerializeObject(productBaseRepository.PrintAll());
+                string dataString = JsonConvert.SerializeObject(sampleRepository.Products.PrintAll());
                 _logger.LogInformation($"AllData: {dataString}");
             });
 
-            return Ok("Success [v4]");
+            return Ok($"Success [v4]. Has '{countProducts}' products;");
         }
     }
 }
