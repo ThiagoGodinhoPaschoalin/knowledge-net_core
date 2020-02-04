@@ -118,6 +118,24 @@ namespace CoreLib
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="models"></param>
+        public virtual void AddRange(IEnumerable<TModel> models)
+        {
+            try
+            {
+                Logger.LogInformation($"[ Called: AddRange ({models.Count()}) ]");
+                context.Set<TModel>().AddRange(models);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "[ Called: AddRange ]");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
         public virtual IEnumerable<TModel> Get(Expression<Func<TModel, bool>> predicate)
@@ -313,6 +331,7 @@ namespace CoreLib
     public interface IBaseRepository<TModel>
     {
         TModel Add(TModel model);
+        void AddRange(IEnumerable<TModel> models);
         bool Remove(TModel model);
         TModel Update(TModel model);
         TModel GetOne(Guid modelId);
