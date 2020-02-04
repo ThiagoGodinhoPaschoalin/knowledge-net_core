@@ -7,7 +7,7 @@ namespace Poc.EFWithManyContexts.Patterns
     /// </summary>
     public sealed class TransactionDbContext : DbContext
     {
-        public TransactionDbContext(DbContextOptions options) 
+        public TransactionDbContext(DbContextOptions<TransactionDbContext> options) 
             : base(options)
         { }
     }

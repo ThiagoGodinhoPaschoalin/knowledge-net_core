@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using Poc.EFWithManyContexts.Modules.Fruits.Contexts;
+using Poc.EFWithManyContexts.Modules.Fruits.Repositories;
 using Poc.EFWithManyContexts.Modules.Occurrences.Contexts;
 using Poc.EFWithManyContexts.Modules.Occurrences.Repositories;
+using Poc.EFWithManyContexts.Modules.Persons.Contexts;
+using Poc.EFWithManyContexts.Modules.Persons.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -52,8 +56,58 @@ namespace Poc.EFWithManyContexts.Patterns
             }
         }
 
+        private PersonDbContext personDbContext;
+        private PersonRepository personRepository;
+        public IPersonRepository Persons
+        {
+            get
+            {
+                if (NeedChangeTransaction(nameof(Persons)))
+                {
+                    personDbContext = new PersonDbContext(dbConnection);
+                    personRepository = new PersonRepository
+                        (personDbContext, loggerFactory.CreateLogger<PersonRepository>(), dbTransaction);
+                }
+
+                return personRepository;
+            }
+        }
+
+        private FruitDbContext fruitDbContext;
+        private FruitRepository fruitRepository;
+        public IFruitRepository Fruits
+        {
+            get
+            {
+                if (NeedChangeTransaction(nameof(Fruits)))
+                {
+                    fruitDbContext = new FruitDbContext(dbConnection);
+                    fruitRepository = new FruitRepository
+                        (fruitDbContext, loggerFactory.CreateLogger<FruitRepository>(), dbTransaction);
+                }
+
+                return fruitRepository;
+            }
+        }
+
         #endregion
 
+        public void Commit()
+        {
+            try
+            {
+                fruitDbContext?.SaveChanges();
+                personDbContext?.SaveChanges();
+                occurrenceDbContext?.SaveChanges();
+                transactionDbContext.Database.CommitTransaction();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Falha na transação do UOW");
+                transactionDbContext.Database.RollbackTransaction();
+                throw;
+            }
+        }
 
 
         #region Handle
@@ -86,7 +140,7 @@ namespace Poc.EFWithManyContexts.Patterns
                     logger.LogWarning($"[ NeedChangeTransaction ] " +
                         $"[ O repositório '{repositoryName}' não foi encontrado no dicionário. ]");
 
-                    throw new NullReferenceException($"O repositório '{repositoryName}' não foi encontrado no dicionário.");
+                    throw new NullReferenceException($"O repositório '{repositoryName}' não foi encontrado no dicionário. Valide a regra em 'RegisterRepositories'!");
                 }
             }
             catch (Exception ex)
@@ -128,6 +182,7 @@ namespace Poc.EFWithManyContexts.Patterns
                 logger.LogInformation("[ RegisterRepositories ]");
 
                 ///Recuperar os nomes de todos os repositórios que ficarão disponível para uso;
+                ///Regra: A propriedade deverá ser pública, e conter 'repository' no nome de sua classe;
                 var repositoriesNames = this.GetType().GetProperties()
                     .Where(x => x.PropertyType.Name.Contains("repository", StringComparison.InvariantCultureIgnoreCase))
                     .Distinct()

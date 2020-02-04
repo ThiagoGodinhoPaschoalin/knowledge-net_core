@@ -28,6 +28,8 @@ namespace Poc.EFWithManyContexts
                 opt.UseSqlServer(BaseConstants.GetConnectionString);
                 opt.EnableSensitiveDataLogging();
             });
+
+            services.AddScoped<UnitOfWorkRepositories>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
