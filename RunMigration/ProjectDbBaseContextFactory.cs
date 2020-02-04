@@ -1,12 +1,17 @@
 ﻿using ContextSample.Contexts;
+using ContextsSample.Modules.Fruits.Contexts;
+using ContextsSample.Modules.Occurrences.Contexts;
+using ContextsSample.Modules.Persons.Contexts;
 using CoreLib.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace RunMigration
 {
     /// <summary>
     /// https://docs.microsoft.com/pt-br/ef/core/miscellaneous/cli/dbcontext-creation
+    /// https://codingblast.com/entityframework-core-add-implementation-idesigntimedbcontextfactory-multiple-dbcontexts/
     /// </summary>
     /// <remarks>
     /// 
@@ -20,16 +25,44 @@ namespace RunMigration
     ///     dotnet ef database update -p ..\ContextSample\ContextSample.csproj
     /// 
     /// </example>
-    public class ProjectDbBaseContextFactory : IDesignTimeDbContextFactory<SampleDbContext>
+    public abstract class DesignTimeDbContextFactory<T> : IDesignTimeDbContextFactory<T> where T : DbContext
     {
-        public SampleDbContext CreateDbContext(string[] args)
+        public T CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<SampleDbContext>();
+            var builder = new DbContextOptionsBuilder<T>();
 
-            optionsBuilder.UseSqlServer(BaseConstants.GetConnectionString);
-            optionsBuilder.EnableSensitiveDataLogging();
+            builder.UseSqlServer(BaseConstants.GetConnectionString);
+            builder.EnableSensitiveDataLogging();
 
-            return new SampleDbContext(optionsBuilder.Options);
+            return (T) Activator.CreateInstance(typeof(T), builder.Options);
         }
     }
+
+    /// <summary>
+    /// dotnet ef migrations add Initial -p ..\ContextSample\ContextSample.csproj
+    /// dotnet ef database update -p ..\ContextSample\ContextSample.csproj
+    /// </summary>
+    public class SampleDesignTimeDbContextFactory : DesignTimeDbContextFactory<SampleDbContext>
+    { }
+
+    /// <summary>
+    /// dotnet ef migrations add InitialPerson -p ..\ContextsSample\ContextsSample.csproj -c PersonDbContext
+    /// dotnet ef database update -p ..\ContextsSample\ContextsSample.csproj -c PersonDbContext
+    /// </summary>
+    public class PersonDesignTimeDbContextFactory : DesignTimeDbContextFactory<PersonDbContext> 
+    { }
+
+    /// <summary>
+    /// dotnet ef migrations add InitialFruit -p ..\ContextsSample\ContextsSample.csproj -c FruitDbContext
+    /// dotnet ef database update -p ..\ContextsSample\ContextsSample.csproj -c FruitDbContext
+    /// </summary>
+    public class FruitDesignTimeDbContextFactory : DesignTimeDbContextFactory<FruitDbContext>
+    { }
+
+    /// <summary>
+    /// dotnet ef migrations add InitialOccurrence -p ..\ContextsSample\ContextsSample.csproj -c OccurrenceDbContext
+    /// dotnet ef database update -p ..\ContextsSample\ContextsSample.csproj -c OccurrenceDbContext
+    /// </summary>
+    public class OccurrenceDesignTimeDbContextFactory : DesignTimeDbContextFactory<OccurrenceDbContext>
+    { }
 }
