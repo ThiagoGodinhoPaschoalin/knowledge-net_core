@@ -14,8 +14,10 @@ using System.Linq;
 
 namespace Poc.EFWithManyContexts.Patterns
 {
-    public class UnitOfWorkRepositories
+    public class UnitOfWorkRepositories : IDisposable
     {
+        internal bool disposed = false;
+
         private DbConnection dbConnection;
         private DbTransaction dbTransaction;
         private readonly TransactionDbContext transactionDbContext;
@@ -107,8 +109,11 @@ namespace Poc.EFWithManyContexts.Patterns
                 transactionDbContext.Database.RollbackTransaction();
                 throw;
             }
-        }
+            finally
+            {
 
+            }
+        }
 
         #region Handle
 
@@ -200,6 +205,47 @@ namespace Poc.EFWithManyContexts.Patterns
             }
         }
 
+        #endregion
+
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed) return;
+
+            if (disposing)
+            {
+                // free other managed objects that implement
+                // IDisposable only
+                occurrenceDbContext.Dispose();
+                fruitDbContext.Dispose();
+                personDbContext.Dispose();
+                transactionDbContext.Dispose();
+                dbTransaction.Dispose();
+                dbConnection.Dispose();
+            }
+
+            // release any unmanaged objects
+            // set the object references to null
+            occurrenceRepository = null;
+            fruitRepository = null;
+            personRepository = null;
+
+            disposed = true;
+        }
+
+        /// <summary>
+        /// Finalizador
+        /// </summary>
+        ~UnitOfWorkRepositories()
+        {
+            Dispose(false);
+        }
         #endregion
     }
 }
