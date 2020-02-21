@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ContextSample.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Poc.ThreadAndTask.Repositories;
@@ -15,12 +16,15 @@ namespace Poc.ThreadAndTask.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly ILogger<ValuesController> _logger;
+        private readonly IServiceScopeFactory serviceScope;
         private readonly ILocalRepository localRepository;
         private readonly SampleRepository sampleRepository;
 
-        public ValuesController(ILogger<ValuesController> logger, ILocalRepository localRepository, SampleRepository sampleRepository)
+        public ValuesController(ILogger<ValuesController> logger, IServiceScopeFactory serviceScope,
+            ILocalRepository localRepository, SampleRepository sampleRepository)
         {
             _logger = logger;
+            this.serviceScope = serviceScope;
             this.localRepository = localRepository;
             this.sampleRepository = sampleRepository;
         }
@@ -150,6 +154,53 @@ namespace Poc.ThreadAndTask.Controllers
             });
 
             return Ok($"Success [v4]. Has '{countProducts}' products;");
+        }
+
+        /// <summary>
+        /// Sql Command: 'sp_who'
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("v5")]
+        public async Task<IActionResult> GetV5()
+        {
+            int countProducts = await Task.Run(() =>
+            {
+                Thread.Sleep(2000);
+                return sampleRepository.Products.GetAll().Count();
+            });
+
+            _ = Task.Run(() =>
+            {
+                using var xpto = serviceScope.CreateScope();
+                Thread.Sleep(5000);
+                Console.WriteLine($"[v5] Task[{Task.CurrentId}]");
+                var printAll = xpto.ServiceProvider.GetService<SampleRepository>().Products.PrintAll();
+                string dataString = JsonConvert.SerializeObject(printAll);
+                _logger.LogInformation($"AllData: {dataString}");
+            });
+
+            return Ok($"Success [v5]. Has '{countProducts}' products;");
+        }
+
+        [HttpGet("v6")]
+        public async Task<IActionResult> GetV6()
+        {
+            int count = 1;
+            while (count < 11)
+            {
+                _ = Task.Run(() =>
+                {
+                    using var xpto = serviceScope.CreateScope();
+                    Thread.Sleep(5000);
+                    Console.WriteLine($"[v5] Task[{Task.CurrentId}]");
+                    var printAll = xpto.ServiceProvider.GetService<SampleRepository>().Products.PrintAll();
+                    string dataString = JsonConvert.SerializeObject(printAll);
+                    _logger.LogInformation($"AllData: {dataString}");
+                });
+                count++;
+            }
+
+            return Ok($"Success [v6]. Has X products;");
         }
     }
 }
