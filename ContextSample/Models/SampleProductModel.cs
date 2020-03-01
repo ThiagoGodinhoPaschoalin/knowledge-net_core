@@ -43,6 +43,9 @@ namespace ContextSample.Models
         [Column("Price", Order = 7, TypeName = "DECIMAL(19,4)")]
         public decimal Price { get; set; }
 
+        [Column("UpdatedDate", TypeName = "DATETIME2(7)")]
+        public DateTime? UpdatedDate { get; set; }
+
         #region navigation
 
         public virtual SampleStarRatingModel StarRating { get; set; }

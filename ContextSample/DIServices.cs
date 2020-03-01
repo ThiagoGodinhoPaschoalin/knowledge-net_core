@@ -17,21 +17,11 @@ namespace ContextSample
             });
 
             services.AddScoped<SampleRepository>();
-        }
 
-        /// <summary>
-        /// Executar migração atualizada
-        /// </summary>
-        /// <param name="app"></param>
-        public static void UseSampleContextMigration(this IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<SampleDbContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
+
+            using var scope = services.BuildServiceProvider().CreateScope();
+            using var context = scope.ServiceProvider.GetService<SampleDbContext>();
+            context.Database.Migrate();
         }
     }
 }

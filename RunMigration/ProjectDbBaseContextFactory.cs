@@ -39,8 +39,8 @@ namespace RunMigration
     }
 
     /// <summary>
-    /// dotnet ef migrations add Initial -p ..\ContextSample\ContextSample.csproj
-    /// dotnet ef database update -p ..\ContextSample\ContextSample.csproj
+    /// dotnet ef migrations add Initial -p ..\ContextSample\ContextSample.csproj -c SampleDbContext
+    /// dotnet ef database update -p ..\ContextSample\ContextSample.csproj -c SampleDbContext
     /// </summary>
     public class SampleDesignTimeDbContextFactory : DesignTimeDbContextFactory<SampleDbContext>
     { }
