@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Poc.ThreadAndTask.CustomExceptions;
 using Poc.ThreadAndTask.Repositories;
 
 namespace Poc.ThreadAndTask.Controllers
@@ -201,6 +202,34 @@ namespace Poc.ThreadAndTask.Controllers
             }
 
             return Ok($"Success [v6]. Has X products;");
+        }
+
+
+        [HttpGet("errorTest")]
+        public async Task<IActionResult> GetError()
+        {
+            try
+            {
+                try
+                {
+                    try
+                    {
+                        throw new InvalidOperationException("Simulando uma operação inválida!");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Level01Exception("Primeiro nível", ex);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Level02Exception("Segundo nível", ex);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Level03Exception("Terceiro nível", ex);
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Poc.ThreadAndTask
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureLogging(config => config.AddConsole());
                     webBuilder.UseStartup<Startup>();
                 });
     }
