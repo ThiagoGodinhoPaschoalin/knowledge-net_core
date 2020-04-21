@@ -1,0 +1,9 @@
+﻿@using InjectSingletonInView.Singletons;
+@inject IExampleSingleton example;
+
+<div>
+    @foreach (var pair in example.GetAll())
+    {
+        <div>@pair.Key => @pair.Value</div>
+    }
+</div>
