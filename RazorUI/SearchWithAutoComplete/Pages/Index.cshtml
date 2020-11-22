@@ -23,6 +23,7 @@
         $(document).ready(function () {
             $("#MyInputText").autocomplete({
                 source: function (request, response) {
+                    //$(".ui-menu-item").val();
                     console.log(JSON.stringify(request));
                     $.ajax({
                         url: "Index?handler=AutoComplete",

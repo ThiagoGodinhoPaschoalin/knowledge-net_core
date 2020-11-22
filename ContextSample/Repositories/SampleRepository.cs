@@ -1,8 +1,11 @@
 ﻿using ContextSample.Contexts;
 using ContextSample.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ContextSample.Repositories
 {
@@ -45,6 +48,19 @@ namespace ContextSample.Repositories
                 var transaction = context.Database.CurrentTransaction.GetDbTransaction();
                 return new SampleStarRatingRepository(context, starLogger, transaction);
             }
+        }
+
+        public SampleProductModel Teste1(Guid guid)
+        {
+            return context.Products.Include(x => x.StarRating).Where(x => x.Id == guid).FirstOrDefault();
+        }
+
+        public SampleProductModel Teste2(Guid guid)
+        {
+            return (from p in context.Products
+                              join s in context.StarRatings on p.StarRating equals s
+                              where p.Id == guid
+                              select p).FirstOrDefault();
         }
 
 

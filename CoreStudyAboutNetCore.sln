@@ -30,9 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RazorUI", "RazorUI", "{1ADB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorUI.SearchWithAutoComplete", "RazorUI\SearchWithAutoComplete\RazorUI.SearchWithAutoComplete.csproj", "{2B637989-E76C-42CF-A707-A717942995DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_code_store", "_code_store\_code_store.csproj", "{4FA47760-344D-4E03-9E80-8CC3B21541CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_code_store", "_code_store\_code_store.csproj", "{4FA47760-344D-4E03-9E80-8CC3B21541CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorUI.InjectSingletonInView", "RazorUI\InjectSingletonInView\RazorUI.InjectSingletonInView.csproj", "{E4DD8696-9030-413C-BD68-A90ED932000F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorUI.InjectSingletonInView", "RazorUI\InjectSingletonInView\RazorUI.InjectSingletonInView.csproj", "{E4DD8696-9030-413C-BD68-A90ED932000F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Poc.Encapsulation", "Poc.Encapsulation\Poc.Encapsulation.csproj", "{FBEDD865-8FFB-437D-A70C-706A6306CFAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleReflection", "ConsoleReflection\ConsoleReflection.csproj", "{64DBED3F-229C-48A0-A03D-1385A2D49DD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -224,6 +228,30 @@ Global
 		{E4DD8696-9030-413C-BD68-A90ED932000F}.Release|x64.Build.0 = Release|Any CPU
 		{E4DD8696-9030-413C-BD68-A90ED932000F}.Release|x86.ActiveCfg = Release|Any CPU
 		{E4DD8696-9030-413C-BD68-A90ED932000F}.Release|x86.Build.0 = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|x64.Build.0 = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Debug|x86.Build.0 = Debug|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|x64.ActiveCfg = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|x64.Build.0 = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|x86.ActiveCfg = Release|Any CPU
+		{FBEDD865-8FFB-437D-A70C-706A6306CFAC}.Release|x86.Build.0 = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|x64.Build.0 = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Debug|x86.Build.0 = Debug|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|x64.ActiveCfg = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|x64.Build.0 = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|x86.ActiveCfg = Release|Any CPU
+		{64DBED3F-229C-48A0-A03D-1385A2D49DD3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
